@@ -1,10 +1,8 @@
 <?php 
-$con=mysqli_connect('localhost','root','Saymon6993!',"ecommerce");
+$con=mysqli_connect('localhost','root','',"ecommerce");
 if($con){
    // echo "connection sucessful";
 }
 else{
-    die(mysqli_error($con));
+    die();
 }
-
-?>
