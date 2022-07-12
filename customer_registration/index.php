@@ -115,8 +115,11 @@ include('../includes/connect.php');
       $result = mysqli_query($con, $insert_query);
       if ($result) {
         echo "<script>alert('Data added sucessfully')</script>";
+        // youneed to create some delay and open sign in page for the user
+        header('Location: ../index.php', true, 302);
       } else {
-        echo "<script>alert(mysqli_error(".'$con'."))</script>";
+        echo '<script>alert("'.mysqli_error($con).'.");</script>';
+
       }
     } else {
       echo "<script>alert('Passwords Do Not Match')</script>";
