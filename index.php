@@ -94,7 +94,13 @@ $_SESSION['items_in_cart']=0;
           <a class="nav-link" href="#">
             <?php
             session_start();
-            echo "Welcome ". $_SESSION['username'];
+            if(isset($_SESSION['username'])){
+              echo "Welcome ". $_SESSION['username'];
+            }
+            else{
+              echo "Welcome Guest";
+            }
+            
             
             ?>
           </a>
@@ -106,7 +112,7 @@ $_SESSION['items_in_cart']=0;
             <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Login</button>
              <form method="POST" action="loginhandler/logout.php">
               <?php
-              if ($_SESSION['user_logged_in_status'] == true) {
+              if (isset($_SESSION['user_logged_in_status'])) {
                 echo "<input class='btn btn-danger mx-4' name='logout_botton' type='submit' name='logout_botton' value='Logout'></input>";
                // header("Refresh:0");
               }
@@ -163,7 +169,7 @@ $_SESSION['items_in_cart']=0;
         <!-- check user registration status -->
        <?php
 //  <!-- use this later on very imp -->
-if($_SESSION['user_logged_in_status'] == true){
+if(isset($_SESSION['user_logged_in_status'])){
   $user_temp_id=$_SESSION['user_id'];
   echo " <li class='nav-item'>
   <a href='./supplier/supplier_registration_page.php?user_temp_id=$user_temp_id' class='btn nav-link'>Become A Supplier?</a>
