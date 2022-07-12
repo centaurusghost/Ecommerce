@@ -1,0 +1,16 @@
+<--- These queries are passed & database is created int he first palce---->
+1. create database ecommerce;
+2. create table user( user_id int auto_increment, user_fullname varchar(50) not null, user_email varchar(25), user_phone_number int(10) not null, user_password varchar(25) not null, user_bank_name varchar(50) not null, user_bank_branch_name varchar(50) not null, user_bank_account_number int(16) not null, user_gender varchar(5) not null, primary key(user_id));
+3. 
+insert into `users` (user_fullname,user_email, user_phone_number, user_password, user_bank_name, user_bank_branch_name, user_bank_account_number, user_gender)  VALUES("ozone","assd@mail.com", 1234467896, "abcde","machbank","lamachaur","1235567890123456","male");
+alter table user add unique(user_email);
+alter table user add unique(user_bank_account_number);
+alter table user add unique(user_phone_number);
+
+
+insert into `users` (user_fullname, user_username, user_email, user_phone_number, user_password, user_bank_name, user_bank_branch_name, user_bank_account_number, user_gender)
+            VALUES("Ozone Wagle","centaur", "ozonewagle998@gmail.com",9846317003,"1234512345","Machbank","Lamachaur","1233322222222222","Male");
+
+insert into `users` (user_fullname, user_username, user_email, user_phone_number, user_password, user_bank_name, user_bank_branch_name, user_bank_account_number, user_gender)
+            VALUES("Manish Poudel","Thedevil", "manish@gmail.com",9846317004,"manish12345","Machbank","Lamachaur","1233322122222222","Male");
+

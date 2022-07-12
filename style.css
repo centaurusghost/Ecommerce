@@ -1,0 +1,37 @@
+.MainLogo{
+    width:5%;
+    height:5%;
+}
+/* .card{
+    width: 50%;
+    height: 50%;
+
+} */
+.card-img-top{
+    padding:1vh 1vw 1vh 1vw ;
+    width: 100%;
+    height: 50%;
+    object-fit: contain;
+}
+.paddingbetweenbotons{
+  float:right;
+}
+.btn-primary{
+    width:49%;
+    height:100%;
+    object-fit: contain;
+}
+.btn-warning{
+    width:49%;
+    height:100%;
+    object-fit: contain;
+}
+ .sidenavbar{
+    border-radius: 5px;
+}
+.sidenavbardelivery{
+    border-radius: 5px;
+}
+
+
+
