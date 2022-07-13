@@ -4,17 +4,40 @@ include('./includes/connect.php');
 if (!isset($_GET['add_to_cart_id'])) {
   // $_SESSION['product_id']=0;
 } else {
-  $product_add_to_cart_id = $_GET['add_to_cart_id'];
- 
-  // $_SESSION['items_in_cart']=$_SESSION['items_in_cart']+1;
   $product_add_to_cart_id = (int)$_GET['add_to_cart_id'];
   $_SESSION['product_id'] = $product_add_to_cart_id;
-  ++$_SESSION['items_in_cart'];
-  echo "<script>alert('Item Added To Your Cart')</script>";
-    echo "<script>window.open('./index.php','_self')</script>";
-  // else{
-  //   echo '<script>alert("'.mysqli_error($con).'.");</script>';
-  // }
+
+ // check the conditions if the item is already present in the array
+  // first find the total no of items present in the array 
+  $total=count($_SESSION['product_id_array']);
+
+  if($total!=0){
+    for($count=1; $count<=$total; $count++){
+      if($product_add_to_cart_id==$_SESSION['product_id_array'][$count-1]){
+        echo "<script>alert('Item Is Already Present In The Cart')</script>";
+      }
+      else{
+        array_push($_SESSION['product_id_array'],$product_add_to_cart_id);
+        ++$_SESSION['items_in_cart'];
+        echo "<script>alert('Item Added To Your Cart')</script>";
+        echo "<script>window.open('./index.php','_self')</script>";
+        break;
+      }
+      }
+  }
+  else{
+        array_push($_SESSION['product_id_array'],$product_add_to_cart_id);
+        ++$_SESSION['items_in_cart'];
+        echo "<script>alert('Item Added To Your Cart')</script>";
+
+  }
+    
+ 
+ 
+  //pushing the product_id added in a session into the session array
+    // echo "<script>alert('Item Added To Your Cart')</script>";
+    // echo "<script>window.open('./index.php','_self')</script>";
+
 }
 
 
@@ -125,7 +148,8 @@ if (!isset($_GET['add_to_cart_id'])) {
             if(isset($_SESSION['user_logged_in_status'])){
   if($_SESSION['user_logged_in_status']==false){
    echo "<button class='btn btn-success' type='button' data-bs-toggle='modal' data-bs-target='#myModal'>Login</button>'";
-  }}
+  }
+}
             ?>
             
             

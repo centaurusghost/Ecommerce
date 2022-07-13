@@ -7,4 +7,5 @@ $_SESSION['items_in_cart'] = 0;
 $_SESSION['product_id'] = 0;
 $_SESSION['session_id'] = "**";
 echo session_id();
+$_SESSION['product_id_array']=[];
 ?>
