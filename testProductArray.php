@@ -1,5 +1,6 @@
 <?php
-session_start();
+include('./includes/cart_handler.php');
+//session_start();
 echo "<pre>";
 print_r($_SESSION['product_id_array']);
 echo "</pre>";
@@ -14,5 +15,7 @@ for($count=0; $count<$total; $count++){
     echo $_SESSION['product_id_array'][$count];
     echo "<br>";
   }
+  echo "function call ";
+  checkAndManageCartItems();
 
 ?>

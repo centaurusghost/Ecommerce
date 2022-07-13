@@ -1,28 +1,37 @@
 <?php
 session_start();
 include('./includes/connect.php');
-if (!isset($_GET['add_to_cart_id'])) {
+echo "Checker";
+if (isset($_GET['add_to_cart_id'])) {
   // $_SESSION['product_id']=0;
-} else {
   $product_add_to_cart_id = (int)$_GET['add_to_cart_id'];
   $_SESSION['product_id'] = $product_add_to_cart_id;
 
  // check the conditions if the item is already present in the array
   // first find the total no of items present in the array 
   $total=count($_SESSION['product_id_array']);
-
+  //prevent inserting garabge values into the array
+  $duplicate_item_checker=0;
+if($product_add_to_cart_id!=0 or $product_add_to_cart_id!=NULL){
   if($total!=0){
     for($count=1; $count<=$total; $count++){
-      if($product_add_to_cart_id==$_SESSION['product_id_array'][$count-1]){
-        echo "<script>alert('Item Is Already Present In The Cart')</script>";
+      echo "cunting";
+      if($product_add_to_cart_id==$_SESSION['product_id_array'][$count-1]){ 
+        $duplicate_item_checker=1;
+        break;
       }
-      else{
+     // $duplicate_item_checker=0;
+      }
+
+      if($duplicate_item_checker==0){
         array_push($_SESSION['product_id_array'],$product_add_to_cart_id);
         ++$_SESSION['items_in_cart'];
         echo "<script>alert('Item Added To Your Cart')</script>";
-        echo "<script>window.open('./index.php','_self')</script>";
-        break;
       }
+      else{
+        echo "else is running ";
+        echo "<script>alert('Item Is Already Present In The Cart')</script>";
+        echo "<script>window.open('./index.php','_self')</script>";
       }
   }
   else{
@@ -31,14 +40,11 @@ if (!isset($_GET['add_to_cart_id'])) {
         echo "<script>alert('Item Added To Your Cart')</script>";
 
   }
-    
- 
- 
+}
   //pushing the product_id added in a session into the session array
     // echo "<script>alert('Item Added To Your Cart')</script>";
     // echo "<script>window.open('./index.php','_self')</script>";
-
-}
+} 
 
 
 ?>
