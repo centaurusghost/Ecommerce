@@ -2,11 +2,13 @@
 include('../includes/connect.php');
 session_start();
 $product_id = (int) $_GET['product_id'];
-$no_of_products=1;
+$no_of_products = 1;
 // implement linked list using php
 ?>
 <!-- setting cokkie to 0 on page refresh or reload -->
-<script> document.cookie = '$count = ' + 1; </script>;
+<script>
+  document.cookie = '$count = ' + 1;
+</script>;
 
 <?php
 $query = "select * from temp_product where product_id=$product_id";
@@ -19,12 +21,10 @@ while ($row = mysqli_fetch_assoc($result)) {
   //$no_of_items = 0;
   // echo "";
 }
-if(!isset($_COOKIE['$count'])){
-  $no_of_products=1;
-
-}
-else{
-  $no_of_products=$_COOKIE['$count'];
+if (!isset($_COOKIE['$count'])) {
+  $no_of_products = 1;
+} else {
+  $no_of_products = $_COOKIE['$count'];
 }
 echo $no_of_products;
 ?>
@@ -117,25 +117,25 @@ echo $no_of_products;
 
                 </form>
                 <?php
-    // i dont know why wont it work
-    // if(isset($_POST['increase_item_number'])){
-    // if($_SESSION['product_number_respective_temp']!=6){
-    //   ++$_SESSION['product_number_respective_temp'];
-    //   echo $_SESSION['product_number_respective_temp'];
-    // }
-    // }
-    // if(isset($_POST['decrease_item_number'])){
-    //   if($_SESSION['product_number_respective_temp']>0){
-    //     --$_SESSION['product_number_respective_temp'];
-    //     echo $_SESSION['product_number_respective_temp'];
-    //   }
-    //   }
-    // if(isset($_POST['increase_item_number'])){
-    // if($no_of_products<=5){
+                // i dont know why wont it work
+                // if(isset($_POST['increase_item_number'])){
+                // if($_SESSION['product_number_respective_temp']!=6){
+                //   ++$_SESSION['product_number_respective_temp'];
+                //   echo $_SESSION['product_number_respective_temp'];
+                // }
+                // }
+                // if(isset($_POST['decrease_item_number'])){
+                //   if($_SESSION['product_number_respective_temp']>0){
+                //     --$_SESSION['product_number_respective_temp'];
+                //     echo $_SESSION['product_number_respective_temp'];
+                //   }
+                //   }
+                // if(isset($_POST['increase_item_number'])){
+                // if($no_of_products<=5){
 
-    // }
+                // }
 
-    ?>
+                ?>
               </div>
             </div>
             <br>
@@ -172,25 +172,26 @@ echo $no_of_products;
 
                       if ($duplicate_item_checker == 0) {
                         array_push($_SESSION['product_id_array'], $product_id);
-                        array_push($_SESSION['product_number_respective_array'],$no_of_products);
+                        array_push($_SESSION['product_number_respective_array'], $no_of_products);
 
                         ++$_SESSION['items_in_cart'];
                         echo "<script>alert('Item Added To Your Cart')</script>";
                       } else {
-                        echo "else is running ";
                         echo "<script>alert('Item Is Already Present In The Cart')</script>";
                         echo "<script>window.open('./detail_page.php?product_id=$product_id','_self')</script>";
                       }
                     } else {
                       array_push($_SESSION['product_id_array'], $product_id);
-                      array_push($_SESSION['product_number_respective_array'],1);
+                      array_push($_SESSION['product_number_respective_array'], 1);
                       ++$_SESSION['items_in_cart'];
                       echo "<script>alert('Item Added To Your Cart')</script>";
                     }
                   }
                 }
                 if (isset($_POST['buy_now_button'])) {
-                  echo "<script>window.open('../cart/checkout_page.php?product_no=$no_of_products','_self')</script>";
+                  $_SESSION['buy_now_produt_id'] = $product_id;
+                  $_SESSION['buy_now_product_number'] =  $no_of_products;
+                  echo "<script>window.open('../cart/instant_buy_now.php','_self')</script>";
                 }
 
 
@@ -262,13 +263,13 @@ echo $no_of_products;
       }
       if ($count != 1 && $check == 0) {
         $count--;
-        
+
         //--$_SESSION['product_number_respective_temp'];
       }
       document.getElementById("quantity").textContent = $count;
-      document.cookie = "$count = " + $count; 
-     // $no_of_products=$count;
-    
+      document.cookie = "$count = " + $count;
+      // $no_of_products=$count;
+
     }
 
 

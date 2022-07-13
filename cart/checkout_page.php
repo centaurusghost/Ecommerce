@@ -1,6 +1,7 @@
 <?php
 include('../includes/connect.php');
 session_start();
+
 if($_SESSION['user_logged_in_status'] == true){
     $total= count($_SESSION['product_id_array']);
     $product_id=0;
