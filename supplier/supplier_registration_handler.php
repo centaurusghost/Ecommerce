@@ -10,7 +10,8 @@ $result=mysqli_query($con,$insert_query_supplier) ;
 if($result){
     
     echo "<script>alert('We Received Your Request')</script>";
-    header("Location: ../index.php");
+    echo "<script>window.open('../index.php','_self')</script>";
+   // header("Location: ../index.php");
    // header("Location: ../index.php");
     //flush();
     //echo '<script>alert("'.mysqli_error($con).'.");</script>';
@@ -19,7 +20,9 @@ if($result){
 else{
   //echo "<script>alert('Task Inserted Data')</script>";
   echo '<script>alert("'.mysqli_error($con).'.");</script>';
-  header("Location: ./supplier_registration_page.php");
+  echo "<script>window.open('../index.php')</script>";
+// do like this when you need to press oke and redirect to another page as well
+ // header("Location: ./supplier_registration_page.php");
  // echo "<script>alert('mysqli_error($con);')</script>";
  //  echo mysqli_error($con);
     

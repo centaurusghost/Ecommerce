@@ -1,10 +1,22 @@
 <?php
+session_start();
 include('./includes/connect.php');
-//session_start();
-$_SESSION['user_logged_in_status']=false;
-$_SESSION['username']="Guest";
-$_SESSION['user_id']=0;
-$_SESSION['items_in_cart']=0;
+if (!isset($_GET['add_to_cart_id'])) {
+  // $_SESSION['product_id']=0;
+} else {
+  $product_add_to_cart_id = $_GET['add_to_cart_id'];
+ 
+  // $_SESSION['items_in_cart']=$_SESSION['items_in_cart']+1;
+  $product_add_to_cart_id = (int)$_GET['add_to_cart_id'];
+  $_SESSION['product_id'] = $product_add_to_cart_id;
+  ++$_SESSION['items_in_cart'];
+  echo "<script>alert('Item Added To Your Cart')</script>";
+    echo "<script>window.open('./index.php','_self')</script>";
+  // else{
+  //   echo '<script>alert("'.mysqli_error($con).'.");</script>';
+  // }
+}
+
 
 ?>
 <!DOCTYPE html>
@@ -23,11 +35,12 @@ $_SESSION['items_in_cart']=0;
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ecommerce Website learning from a video</title>
+  <title>Ecommerce Website learning From A video</title>
 
 <body>
+
   <?php
-//echo $_SESSION['user_id'];
+
   ?>
   <!-- navigation bar -->
   <div class="container-fluid p-0">
@@ -59,19 +72,18 @@ $_SESSION['items_in_cart']=0;
 
             <li class="nav-item">
               <a class="nav-link" href="#"><i class="fa-solid fa-cart-shopping"></i><sup>
-              <?php 
-              $tempvar=$_SESSION['user_id'];
-              echo "<script>
-               if($tempvar==0){document.write(0);}
-               else{
-                document.write(12);
-               // document.write();
-               }
-              </script>";
-               ?>
-                
-            
-            </sup></a>
+                  <?php
+                  if (isset($_SESSION['items_in_cart'])) {
+                   echo $_SESSION['items_in_cart'];
+                  } 
+                  else{
+                    echo 0;
+                  }
+                  
+                  ?>
+
+
+                </sup></a>
             </li>
 
             <li class="nav-item">
@@ -93,41 +105,38 @@ $_SESSION['items_in_cart']=0;
         <li class="nav-item">
           <a class="nav-link" href="#">
             <?php
-            session_start();
-            if(isset($_SESSION['username'])){
-              echo "Welcome ". $_SESSION['username'];
-            }
-            else{
+            if (isset($_SESSION['username'])) {
+              echo "Welcome " . $_SESSION['username'];
+           
+            } else {
               echo "Welcome Guest";
             }
-            
-            
+
+
             ?>
           </a>
         </li>
 
         <li class="nav-item">
-         
+
           <div class="modal-footer d-flex">
-            <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Login</button>
-             <form method="POST" action="loginhandler/logout.php">
+            <!-- <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Login</button> -->
+            <?php
+            if(isset($_SESSION['user_logged_in_status'])){
+  if($_SESSION['user_logged_in_status']==false){
+   echo "<button class='btn btn-success' type='button' data-bs-toggle='modal' data-bs-target='#myModal'>Login</button>'";
+  }}
+            ?>
+            
+            
+            <form method="POST" action="loginhandler/logout.php">
               <?php
-              if (isset($_SESSION['user_logged_in_status'])) {
+              if (isset($_SESSION['user_logged_in_status']) and $_SESSION['user_logged_in_status']==true) {
                 echo "<input class='btn btn-danger mx-4' name='logout_botton' type='submit' name='logout_botton' value='Logout'></input>";
-               // header("Refresh:0");
+                // header("Refresh:0");
               }
-              // if(isset($_POST['logout_botton'])){
-              //   session_destroy();
-              //   echo "<script>
-              //   window.open('http://localhost/Ecommerce%20Website/index.php,'_self');
-              // </script>";
-              //   session_start();
-              //   $_SESSION['user_logged_in_status'] = false;
-              //   $_SESSION['username']="Guest";
-              // }
               ?>
-             
-          </form>
+            </form>
 
           </div>
 
@@ -167,29 +176,16 @@ $_SESSION['items_in_cart']=0;
           </div>
         </li>
         <!-- check user registration status -->
-       <?php
-//  <!-- use this later on very imp -->
-if(isset($_SESSION['user_logged_in_status'])){
-  $user_temp_id=$_SESSION['user_id'];
-  echo " <li class='nav-item'>
+        <?php
+        //  <!-- use this later on very imp -->
+        if (isset($_SESSION['user_logged_in_status']) and $_SESSION['user_logged_in_status']==true) {
+          $user_temp_id = $_SESSION['user_id'];
+          echo " <li class='nav-item'>
   <a href='./supplier/supplier_registration_page.php?user_temp_id=$user_temp_id' class='btn nav-link'>Become A Supplier?</a>
 </li>";
+        }
+        ?>
 
-// echo "<div class='col-md-4 mb-2'>
-// <div class='card'>
-//   <img class='card-img-top w-full h-25' src='./productimages/$product_image' alt='Card image cap'>
-//   <div class='card-body'>
-//     <h5 class='card-title'>$product_title</h5>
-//     <p class='card-text'>Rs.$product_price</p>
-//     <a href='#' class='btn btn-primary'>Add To Cart</a>
-//     <a href='./pages/detail_page.php?product_id=$product_id' class='btn btn-warning paddingbetweenbotons' >View More</a>
-//   </div>
-// </div>
-
-// </div>";
-}
-       ?>
-        
 
       </ul>
     </nav>
@@ -238,7 +234,8 @@ if(isset($_SESSION['user_logged_in_status'])){
         <div class='card-body'>
           <h5 class='card-title'>$product_title</h5>
           <p class='card-text'>Rs.$product_price</p>
-          <a href='#' class='btn btn-primary' onclick=''>Add To Cart</a>
+          <form action='./cart_handler.php'>
+          <a href='index.php?add_to_cart_id=$product_id' class='btn btn-primary' onclick=''>Add To Cart</a> </form>
           <a href='./pages/detail_page.php?product_id=$product_id' class='btn btn-warning paddingbetweenbotons' >View More</a>
         </div>
       </div>
@@ -246,10 +243,10 @@ if(isset($_SESSION['user_logged_in_status'])){
     </div>";
             }
           }
-         
+
           ?>
         </div>
-        
+
 
       </div>
 

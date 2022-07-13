@@ -35,6 +35,7 @@ session_start();
 
             } else {
               echo "<script>alert('Email or password Do not match')</script>";
+              echo "<script>window.open('../index.php')</script>";
             //  $_SESSION['user_logged_in_status'] = false;
             }
           }
