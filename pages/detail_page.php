@@ -1,8 +1,13 @@
 <?php
 include('../includes/connect.php');
 session_start();
-$product_id =(int) $_GET['product_id'];
+$product_id = (int) $_GET['product_id'];
+$no_of_products=1;
+// implement linked list using php
 ?>
+<!-- setting cokkie to 0 on page refresh or reload -->
+<script> document.cookie = '$count = ' + 1; </script>;
+
 <?php
 $query = "select * from temp_product where product_id=$product_id";
 $result = mysqli_query($con, $query);
@@ -10,9 +15,18 @@ while ($row = mysqli_fetch_assoc($result)) {
   $product_title = $row['product_title'];
   $product_price = $row['product_price'];
   $product_image = $row['product_image'];
+  $product_details = $row['product_details'];
   //$no_of_items = 0;
- // echo "";
+  // echo "";
 }
+if(!isset($_COOKIE['$count'])){
+  $no_of_products=1;
+
+}
+else{
+  $no_of_products=$_COOKIE['$count'];
+}
+echo $no_of_products;
 ?>
 <!DOCTYPE html>
 <html>
@@ -96,17 +110,33 @@ while ($row = mysqli_fetch_assoc($result)) {
                                     ?></p>
               <div>
                 <span>Quantity</span>
-                <form>
+                <form method="POST">
                   <input type='button' value='+' name='increase_item_number' onClick="increaseItems(1)"></input>
                   <span id='quantity' name='qty'>1</span>
                   <input type='button' value='-' name='decrease_item_number' onClick="increaseItems(0)"></input>
 
                 </form>
+                <?php
+    // i dont know why wont it work
+    // if(isset($_POST['increase_item_number'])){
+    // if($_SESSION['product_number_respective_temp']!=6){
+    //   ++$_SESSION['product_number_respective_temp'];
+    //   echo $_SESSION['product_number_respective_temp'];
+    // }
+    // }
+    // if(isset($_POST['decrease_item_number'])){
+    //   if($_SESSION['product_number_respective_temp']>0){
+    //     --$_SESSION['product_number_respective_temp'];
+    //     echo $_SESSION['product_number_respective_temp'];
+    //   }
+    //   }
+    // if(isset($_POST['increase_item_number'])){
+    // if($no_of_products<=5){
 
+    // }
 
-
+    ?>
               </div>
-
             </div>
             <br>
             <div class=''>
@@ -125,39 +155,42 @@ while ($row = mysqli_fetch_assoc($result)) {
 
                 <?php
                 if (isset($_POST['add_to_cart_button'])) {
-                 // check the conditions if the item is already present in the array
-  // first find the total no of items present in the array 
-  $total = count($_SESSION['product_id_array']);
-  //prevent inserting garabge values into the array
-  $duplicate_item_checker = 0;
-  if ($product_id != 0 or $product_id != NULL) {
-    if ($total != 0) {
-      for ($count = 1; $count <= $total; $count++) {
-        echo "cunting";
-        if ($product_id == $_SESSION['product_id_array'][$count - 1]) {
-          $duplicate_item_checker = 1;
-          break;
-        }
-      }
+                  // check the conditions if the item is already present in the array
+                  // first find the total no of items present in the array 
+                  $total = count($_SESSION['product_id_array']);
+                  //prevent inserting garabge values into the array
+                  $duplicate_item_checker = 0;
+                  if ($product_id != 0 or $product_id != NULL) {
+                    if ($total != 0) {
+                      for ($count = 1; $count <= $total; $count++) {
+                        echo "cunting";
+                        if ($product_id == $_SESSION['product_id_array'][$count - 1]) {
+                          $duplicate_item_checker = 1;
+                          break;
+                        }
+                      }
 
-      if ($duplicate_item_checker == 0) {
-        array_push($_SESSION['product_id_array'], $product_id);
-        ++$_SESSION['items_in_cart'];
-        echo "<script>alert('Item Added To Your Cart')</script>";
-      } else {
-        echo "else is running ";
-        echo "<script>alert('Item Is Already Present In The Cart')</script>";
-        echo "<script>window.open('./detail_page.php?product_id=$product_id','_self')</script>";
-      }
-    } else {
-      array_push($_SESSION['product_id_array'], $product_id);
-      ++$_SESSION['items_in_cart'];
-      echo "<script>alert('Item Added To Your Cart')</script>";
-    }
-  }
+                      if ($duplicate_item_checker == 0) {
+                        array_push($_SESSION['product_id_array'], $product_id);
+                        array_push($_SESSION['product_number_respective_array'],$no_of_products);
+
+                        ++$_SESSION['items_in_cart'];
+                        echo "<script>alert('Item Added To Your Cart')</script>";
+                      } else {
+                        echo "else is running ";
+                        echo "<script>alert('Item Is Already Present In The Cart')</script>";
+                        echo "<script>window.open('./detail_page.php?product_id=$product_id','_self')</script>";
+                      }
+                    } else {
+                      array_push($_SESSION['product_id_array'], $product_id);
+                      array_push($_SESSION['product_number_respective_array'],1);
+                      ++$_SESSION['items_in_cart'];
+                      echo "<script>alert('Item Added To Your Cart')</script>";
+                    }
+                  }
                 }
                 if (isset($_POST['buy_now_button'])) {
-                  echo "Buying products now";
+                  echo "<script>window.open('../cart/checkout_page.php?product_no=$no_of_products','_self')</script>";
                 }
 
 
@@ -213,11 +246,9 @@ while ($row = mysqli_fetch_assoc($result)) {
     </div>
     <div class='w-full'>
       <h3>Description about above product</h3>
-      <p>e to having not reached adulthood. Devastated by the news of Dam-ryeong's marriage, she decides to
-        leave him forever. Nevertheless, Dam-ryeong's love for Se-hwa forces him to leave his wife on their
-        wedding night and jump into the ocean to look for her. A distraught Se-hwa rescues him from drowning
-        and promptly erases his memories of her and their love so that he may not look for her again.
-
+      <p> <?php
+          echo $product_details;
+          ?>
     </div>
   </form>
 
@@ -231,9 +262,13 @@ while ($row = mysqli_fetch_assoc($result)) {
       }
       if ($count != 1 && $check == 0) {
         $count--;
+        
+        //--$_SESSION['product_number_respective_temp'];
       }
-
       document.getElementById("quantity").textContent = $count;
+      document.cookie = "$count = " + $count; 
+     // $no_of_products=$count;
+    
     }
 
 

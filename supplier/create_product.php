@@ -1,5 +1,6 @@
 <?php
 include('../includes/connect.php');
+session_start();
 ?>
 <!DOCTYPE html>
 
@@ -7,7 +8,7 @@ include('../includes/connect.php');
 
 <head>
     <meta charset="UTF-8">
-    <title> User Registration </title>
+    <title> Insert Products </title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 
@@ -41,14 +42,19 @@ include('../includes/connect.php');
                     <input type="text" id="form5Example1" name="product_title" class="form-control" placeholder="Product Name" maxlength="50" required/>
                 </div>
                 <div class="form-group mt-4">
-                    <textarea rows="5" class="form-control" name="description" placeholder="Describe about product" maxlength="300"></textarea>
+                    <textarea rows="5" class="form-control" name="product_details" placeholder="Describe about product" maxlength="300"></textarea>
                 </div>
                 <div class="form-outline mt-4">
                     <input type="number" id="" class="form-control" name="product_price" placeholder="Product Price" pattern="\d*" maxlength="7" required />
                 </div>
+
                 <div class="form-outline mt-4">
-                    <input type="text" id="" class="form-control" placeholder="Product Category" />
+
+                 <input type="text" id="" class="form-control" name="product_category" placeholder="Product Category" />
+                    
                 </div>
+
+                
                 <div class="button mt-4 mb-5">
                     <button class="btn px-2 py-1 bg-success " name="insert_botton" >Insert Product</button>
                 </div>
@@ -72,20 +78,26 @@ if(isset($_POST['insert_botton'])){
   
     $product_title=$_POST['product_title'];
     $product_price=(int)$_POST['product_price'];
+    $product_details=$_POST['product_details'];
+    $product_category=$_POST['product_category'];
+
 
     // to acess product_images and urls or what we are learning
     $product_image=$_FILES['product_image']['name'];
 
     $product_temp_image=$_FILES['product_image']['tmp_name'];
-    $insert_product_query="insert into temp_product(product_title, product_price, product_image) values('$product_title','$product_price','$product_image')";
+    $insert_product_query="insert into temp_product(product_title, product_price, product_image, product_category, product_details) values('$product_title','$product_price','$product_image','$product_category','$product_details')";
     $remove_product_query="delete from temp_product where product_image='$product_image'";
     $result=mysqli_query($con,$insert_product_query);
     if(!$result){
-        echo "<script>alert('Task Failed sucessfully')</script>";
+        echo '<script>alert("'.mysqli_error($con).'.");</script>';
+        echo "<script>window.open('./create_product.php')</script>";
        // mysqli_query($con,$remove_product_query); 
     }
     else{
         move_uploaded_file($product_temp_image,"../productimages/$product_image");
+        echo "<script>alert('Insertion Sucessful')</script>";
+       // echo "<script>window.open('./create_product.php')</script>";
     }
 
 // acessing image tep names

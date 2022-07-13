@@ -1,21 +1,25 @@
 <?php
 include('./includes/cart_handler.php');
 //session_start();
+$total= count($_SESSION['product_id_array']);
+$total_number=count($_SESSION['product_number_respective_array']);
+echo "Total number of items:".$total;
+echo "<br>";
+echo "Total number of id:".$total_number;
+echo "<br>";
 echo "<pre>";
 print_r($_SESSION['product_id_array']);
 echo "</pre>";
-$total= count($_SESSION['product_id_array']);
-echo "<br>";
-echo $total;
-echo "<br>";
-echo "<br>";
-echo "<br>";
 
-for($count=0; $count<$total; $count++){
-    echo $_SESSION['product_id_array'][$count];
-    echo "<br>";
-  }
-  echo "function call ";
-  checkAndManageCartItems();
 
+echo "<pre>";
+print_r($_SESSION['product_number_respective_array']);
+echo "</pre>";
+
+
+
+
+
+
+ 
 ?>

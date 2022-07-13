@@ -1,50 +1,48 @@
 <?php
 session_start();
 include('./includes/connect.php');
-echo "Checker";
+$no_of_products=1;
 if (isset($_GET['add_to_cart_id'])) {
   // $_SESSION['product_id']=0;
   $product_add_to_cart_id = (int)$_GET['add_to_cart_id'];
   $_SESSION['product_id'] = $product_add_to_cart_id;
 
- // check the conditions if the item is already present in the array
+  // check the conditions if the item is already present in the array
   // first find the total no of items present in the array 
-  $total=count($_SESSION['product_id_array']);
+  $total = count($_SESSION['product_id_array']);
   //prevent inserting garabge values into the array
-  $duplicate_item_checker=0;
-if($product_add_to_cart_id!=0 or $product_add_to_cart_id!=NULL){
-  if($total!=0){
-    for($count=1; $count<=$total; $count++){
-      echo "cunting";
-      if($product_add_to_cart_id==$_SESSION['product_id_array'][$count-1]){ 
-        $duplicate_item_checker=1;
-        break;
-      }
-     // $duplicate_item_checker=0;
+  $duplicate_item_checker = 0;
+  if ($product_add_to_cart_id != 0 or $product_add_to_cart_id != NULL) {
+    if ($total != 0) {
+      for ($count = 1; $count <= $total; $count++) {
+        //echo "cunting";
+        if ($product_add_to_cart_id == $_SESSION['product_id_array'][$count - 1]) {
+          $duplicate_item_checker = 1;
+          break;
+        }
       }
 
-      if($duplicate_item_checker==0){
-        array_push($_SESSION['product_id_array'],$product_add_to_cart_id);
+      if ($duplicate_item_checker == 0) {
+        array_push($_SESSION['product_id_array'], $product_add_to_cart_id);
+        array_push($_SESSION['product_number_respective_array'],$no_of_products);
         ++$_SESSION['items_in_cart'];
         echo "<script>alert('Item Added To Your Cart')</script>";
-      }
-      else{
-        echo "else is running ";
+      } else {
+        // echo "else is running ";
         echo "<script>alert('Item Is Already Present In The Cart')</script>";
         echo "<script>window.open('./index.php','_self')</script>";
       }
+    } else {
+      array_push($_SESSION['product_id_array'], $product_add_to_cart_id);
+      array_push($_SESSION['product_number_respective_array'],1);
+      ++$_SESSION['items_in_cart'];
+      echo "<script>alert('Item Added To Your Cart')</script>";
+    }
   }
-  else{
-        array_push($_SESSION['product_id_array'],$product_add_to_cart_id);
-        ++$_SESSION['items_in_cart'];
-        echo "<script>alert('Item Added To Your Cart')</script>";
-
-  }
-}
   //pushing the product_id added in a session into the session array
-    // echo "<script>alert('Item Added To Your Cart')</script>";
-    // echo "<script>window.open('./index.php','_self')</script>";
-} 
+  // echo "<script>alert('Item Added To Your Cart')</script>";
+  // echo "<script>window.open('./index.php','_self')</script>";
+}
 
 
 ?>
@@ -72,7 +70,7 @@ if($product_add_to_cart_id!=0 or $product_add_to_cart_id!=NULL){
 
   ?>
   <!-- navigation bar -->
-  <div class="container-fluid p-0">
+  <div id="myDIV" class="container-fluid p-0">
     <!-- first child -->
     <nav class="navbar navbar-expand-lg bg-warning">
       <div class="container-fluid">
@@ -103,16 +101,45 @@ if($product_add_to_cart_id!=0 or $product_add_to_cart_id!=NULL){
               <a class="nav-link" href="#"><i class="fa-solid fa-cart-shopping"></i><sup>
                   <?php
                   if (isset($_SESSION['items_in_cart'])) {
-                   echo $_SESSION['items_in_cart'];
-                  } 
-                  else{
+                    echo $_SESSION['items_in_cart'];
+                  } else {
                     echo 0;
                   }
-                  
+
                   ?>
 
 
                 </sup></a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Category
+              </a>
+
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+                <?php
+                // getting product category from database;
+                $get_category_query = "select * from category";
+
+                $result = mysqli_query($con, $get_category_query);
+                while ($row = mysqli_fetch_assoc($result)) {
+                  $category_id = $row['category_id'];
+                  $category_name = $row['category_name'];
+                  echo "<li><a class='dropdown-item submenu' id='cat1' href='#'>$category_name</a>
+                <ul class='submenu2 bg-primary position-absolute start-100 top-2.5' display:none; id='subcat.$category_id'>
+                    <li class='nav-item' style='list-style:none;'><a href='#' class='nav-link'>submenu1</a></li>
+                    <li class='nav-item' style='list-style:none;'><a href='#' class='nav-link'>submenu2</a></li>
+                    <li class='nav-item' style='list-style:none;'><a href='#' class='nav-link'>submenu3</a></li>
+                </ul>
+            </li>";
+                }
+
+                ?>
+              </ul>
+
+
             </li>
 
             <li class="nav-item">
@@ -136,7 +163,6 @@ if($product_add_to_cart_id!=0 or $product_add_to_cart_id!=NULL){
             <?php
             if (isset($_SESSION['username'])) {
               echo "Welcome " . $_SESSION['username'];
-           
             } else {
               echo "Welcome Guest";
             }
@@ -151,17 +177,17 @@ if($product_add_to_cart_id!=0 or $product_add_to_cart_id!=NULL){
           <div class="modal-footer d-flex">
             <!-- <button class="btn btn-success" type="button" data-bs-toggle="modal" data-bs-target="#myModal">Login</button> -->
             <?php
-            if(isset($_SESSION['user_logged_in_status'])){
-  if($_SESSION['user_logged_in_status']==false){
-   echo "<button class='btn btn-success' type='button' data-bs-toggle='modal' data-bs-target='#myModal'>Login</button>'";
-  }
-}
+            if (isset($_SESSION['user_logged_in_status'])) {
+              if ($_SESSION['user_logged_in_status'] == false) {
+                echo "<button class='btn btn-success' type='button' data-bs-toggle='modal' data-bs-target='#myModal'>Login</button>'";
+              }
+            }
             ?>
-            
-            
+
+
             <form method="POST" action="loginhandler/logout.php">
               <?php
-              if (isset($_SESSION['user_logged_in_status']) and $_SESSION['user_logged_in_status']==true) {
+              if (isset($_SESSION['user_logged_in_status']) and $_SESSION['user_logged_in_status'] == true) {
                 echo "<input class='btn btn-danger mx-4' name='logout_botton' type='submit' name='logout_botton' value='Logout'></input>";
                 // header("Refresh:0");
               }
@@ -208,7 +234,7 @@ if($product_add_to_cart_id!=0 or $product_add_to_cart_id!=NULL){
         <!-- check user registration status -->
         <?php
         //  <!-- use this later on very imp -->
-        if (isset($_SESSION['user_logged_in_status']) and $_SESSION['user_logged_in_status']==true) {
+        if (isset($_SESSION['user_logged_in_status']) and $_SESSION['user_logged_in_status'] == true) {
           $user_temp_id = $_SESSION['user_id'];
           echo " <li class='nav-item'>
   <a href='./supplier/supplier_registration_page.php?user_temp_id=$user_temp_id' class='btn nav-link'>Become A Supplier?</a>
@@ -283,20 +309,23 @@ if($product_add_to_cart_id!=0 or $product_add_to_cart_id!=NULL){
 
     </div>
 
-
-
-
-
     <!-- last child -->
     <div class="bg-warning p-3 text-center text-light">
       <p>Ozone & Tilak. Feel Free To Contact Us</p>
     </div>
   </div>
-  <?php
-
-  ?>
   <!-- bootstrap js link -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+  <!-- get and bring back the scroll position -->
+  <script>
+    function myFunction() {
+      const element = document.getElementById("myDIV");
+      let x = element.scrollLeft;
+      let y = element.scrollTop;
+      document.getElementById("demo").innerHTML = "Horizontally: " + x.toFixed() + "<br>Vertically: " + y.toFixed();
+    }
+  </script>
+
 
 </body>
 
